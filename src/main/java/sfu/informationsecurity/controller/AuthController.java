@@ -1,13 +1,15 @@
 package sfu.informationsecurity.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import sfu.informationsecurity.dto.LoginRequest;
 import sfu.informationsecurity.dto.RegisterRequest;
 import sfu.informationsecurity.model.Role;
@@ -17,7 +19,7 @@ import sfu.informationsecurity.service.JwtService;
 
 import java.util.Collections;
 
-@RestController
+@Controller
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -33,9 +35,10 @@ public class AuthController {
     }
 
     @PostMapping("/registration")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest request) {
+    public String registerUser(@ModelAttribute RegisterRequest request, Model model) {
         if (userRepository.findByUsername(request.getUsername()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username is already taken");
+            model.addAttribute("error", "Имя пользователя уже занято");
+            return "registration";
         }
 
         User user = new User();
@@ -45,17 +48,33 @@ public class AuthController {
         userRepository.save(user);
 
         String token = jwtService.generateToken(user.getUsername());
-        return ResponseEntity.ok(Collections.singletonMap("token", token));
+        return "redirect:/login";
+    }
+
+    @GetMapping("/registration")
+    public String registrationPage() {
+        return "registration";
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest request) {
+    public String login(@ModelAttribute LoginRequest request, Model model, HttpServletResponse response) {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
         String token = jwtService.generateToken(request.getUsername());
-        return ResponseEntity.ok(token);
+
+        Cookie cookie = new Cookie("JWT_TOKEN", token);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(7 * 24 * 60 * 60);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        return "redirect:/";
     }
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
 }

@@ -1,0 +1,154 @@
+/* Основной фон страницы */
+body {
+    background: rgb(239, 124, 29);
+    /*background: radial-gradient(circle, rgb(225, 123, 13) 0%) 100%);*/
+}
+
+/* Общие стили для всех кнопок и кнопки кликера */
+.button, .clicker {
+    -webkit-user-select: none; /* Запрет выделения текста */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    outline: none;
+    border: none;
+    background-color: #FFFFFF; /* Белый фон */
+    transition: box-shadow 0.3s, background-color 0.3s; /* Плавные переходы для тени и фона */
+}
+
+/* Эффекты при наведении на кнопки */
+.button:hover, .clicker:hover {
+    box-shadow: 0 27px 55px 0 rgba(0, 0, 0, 0.3), 0 17px 17px 0 rgba(15, 15, 15, 0.15); /* Тень при наведении */
+}
+
+/* Эффекты при нажатии на кнопки */
+.button:active, .clicker:active {
+    transition: box-shadow 0.15s, background-color 0.1s; /* Ускоренные переходы для активного состояния */
+    box-shadow: 0 10px 10px 0 rgba(0, 0, 0, 0.3), 0 20px 20px 0 rgba(0, 0, 0, 0.15); /* Тень при нажатии */
+    background-color: #F0F0F0; /* Изменение фона при нажатии */
+}
+
+/* Стили для обычных кнопок */
+.button {
+    width: 200px; /* Ширина кнопки */
+    height: 50px; /* Высота кнопки */
+    position: absolute;
+    left: 87%; /* Позиция слева */
+    transform: translate(-50%, -50%); /* Центрирование */
+}
+
+/* Стили для отключенных кнопок */
+.button:disabled {
+    background-color: #B3B3B3; /* Серый фон для отключенных кнопок */
+}
+
+/* Позиционирование кнопок по вертикали */
+#b1 { top: 22%; }
+#b2 { top: 32%; }
+#b3 { top: 42%; }
+#b4 { top: 8%; }
+
+/* Стили для активных кнопок */
+.button:enabled {
+    background-color: rgb(236, 224, 3); /* Зеленый фон для активных кнопок */
+}
+
+/* Стили для кнопки кликера */
+.clicker {
+    border-radius: 50%;
+    width: 200px; /* Ширина */
+    height: 200px; /* Высота */
+    position: absolute;
+    top: 50%; /* Позиция сверху */
+    left: 50%; /* Позиция слева */
+    transform: translate(-50%, -50%); /* Центрирование */
+    transition: width 0.3s, height 0.3s; /* Плавные переходы для изменения размера */
+}
+
+/* Эффекты при наведении на кнопку кликера */
+.clicker:hover {
+    width: 225px; /* Увеличение ширины */
+    height: 225px; /* Увеличение высоты */
+}
+
+/* Эффекты при нажатии на кнопку кликера */
+.clicker:active {
+    transform: translate(-50%, -50%) scale(0.95); /* Уменьшение размера при нажатии */
+}
+
+/* Стили для текста с деньгами */
+#money {
+    -webkit-touch-callout: none; /* Отключение выделения текста при касании на мобильных устройствах */
+    -webkit-user-select: none; /* Запрет выделения текста */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    margin-left: 4px;
+    color: #FFFFFF;
+    font-size: 50px;
+}
+
+/* Стили для модального окна */
+.modal {
+    display: none; /* Скрыто по умолчанию */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5); /* Полупрозрачный черный фон */
+}
+
+/* Стили для содержимого модального окна */
+.modal-content {
+    background-color: #ffffff86; /* Полупрозрачный белый фон */
+    margin: 15% auto; /* Центрирование по вертикали и горизонтали */
+    padding: 20px; /* Внутренние отступы */
+    border: 1px solid #888;
+    width: 300px;
+    text-align: center;
+    border-radius: 0px 0px 25px 25px; /* Закругление нижних углов */
+}
+
+/* Стили для кнопки закрытия модального окна */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* Эффекты при наведении на кнопку закрытия */
+.close:hover,
+.close:focus {
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    cursor: pointer; /* Курсор в виде указателя */
+}
+
+/* Стили для полей ввода в форме авторизации */
+#auth-form input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    box-sizing: border-box; /* Учитываем внутренние отступы в ширине */
+}
+
+/* Стили для кнопки в форме авторизации */
+#auth-form button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    cursor: pointer; /* Курсор в виде указателя */
+}
+
+/* Стили для отображения имени пользователя */
+.username-display {
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%); /* Центрирование по горизонтали */
+    font-size: 24px;
+    color: white;
+    z-index: 1000;
+}
