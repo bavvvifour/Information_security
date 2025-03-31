@@ -30,32 +30,37 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
-    private int clickMultiplier = 1; // Х2 тапа в нажатие
-    private int autoGainBonus = 0;   // +5 в секунду
-    private int autoMultiplier = 1;  // Х2 авто-тап
+    @Column(nullable = false)
+    private int b1Level = 1;
 
-    public int getClickMultiplier() {
-        return clickMultiplier;
+    @Column(nullable = false)
+    private int b2Level = 1;
+
+    @Column(nullable = false)
+    private int b3Level = 1;
+
+    public int getB1Level() {
+        return b1Level;
     }
 
-    public void setClickMultiplier(int clickMultiplier) {
-        this.clickMultiplier = clickMultiplier;
+    public void setB1Level(int b1Level) {
+        this.b1Level = b1Level;
     }
 
-    public int getAutoMultiplier() {
-        return autoMultiplier;
+    public int getB3Level() {
+        return b3Level;
     }
 
-    public void setAutoMultiplier(int autoMultiplier) {
-        this.autoMultiplier = autoMultiplier;
+    public void setB3Level(int b3Level) {
+        this.b3Level = b3Level;
     }
 
-    public int getAutoGainBonus() {
-        return autoGainBonus;
+    public int getB2Level() {
+        return b2Level;
     }
 
-    public void setAutoGainBonus(int autoGainBonus) {
-        this.autoGainBonus = autoGainBonus;
+    public void setB2Level(int b2Level) {
+        this.b2Level = b2Level;
     }
 
     private int clickGain = 1;

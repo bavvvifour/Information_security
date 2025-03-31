@@ -2,22 +2,20 @@ package sfu.informationsecurity.controller;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import sfu.informationsecurity.dto.LoginRequest;
 import sfu.informationsecurity.dto.RegisterRequest;
 import sfu.informationsecurity.model.Role;
 import sfu.informationsecurity.model.User;
 import sfu.informationsecurity.repository.UserRepository;
 import sfu.informationsecurity.service.JwtService;
-
-import java.util.Collections;
 
 @Controller
 public class AuthController {

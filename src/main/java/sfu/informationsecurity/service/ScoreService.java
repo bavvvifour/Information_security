@@ -1,7 +1,5 @@
 package sfu.informationsecurity.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import sfu.informationsecurity.model.Score;
 import sfu.informationsecurity.model.User;
@@ -34,14 +32,5 @@ public class ScoreService {
 
         score.setScore(newScore);
         scoreRepository.save(score);
-    }
-
-    @Scheduled(fixedRate = 10000)
-    public void autoUpdateScore() {
-        scoreRepository.findAll().forEach(score -> {
-            int newScore = score.getScore() + 10;
-            score.setScore(newScore);
-            scoreRepository.save(score);
-        });
     }
 }

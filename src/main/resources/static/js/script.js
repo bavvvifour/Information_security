@@ -1,23 +1,20 @@
-// Глобальные переменные
 let money = 0;
 let clickGain = 1;
 let autoGain = 1;
-let token = null;
 let interval;
 
 const clickerButton = document.getElementById("main-clicker");
 const moneyText = document.getElementById("money");
 const shopButtons = [document.getElementById("b1"), document.getElementById("b2"), document.getElementById("b3")];
 
-// Обновление денег на экране
 function updateMoney(check = true) {
     moneyText.textContent = `${money} е-балл`;
     if (check) checkPrices();
 }
 
-// Автоматическое начисление денег
 function autoMoney() {
-    if (interval) clearInterval(interval); // предотвращаем дублирование интервалов
+    if (interval) return;
+
     interval = setInterval(() => {
         money += autoGain;
         updateMoney();
@@ -25,19 +22,10 @@ function autoMoney() {
     }, 1000);
 }
 
-function onClick2(obj) {
-    if (obj.purchaseLvl === 1) {  // Только при первой покупке
-        autoMoney(1);
-    }
-}
-
-
-// Проверка цен и обновление состояния кнопок магазина
 function checkPrices() {
     shop.forEach(item => item.element.disabled = money < item.price);
 }
 
-// Класс магазина
 class ShopElement {
     constructor(id, priceFunc, clickFunc) {
         this.id = id;
@@ -66,83 +54,82 @@ class ShopElement {
             this.update();
             updateMoney();
             saveProgress();
+
+            if (this.id === "b2" || this.id === "b3") {
+                clearInterval(interval);
+                interval = null;
+                autoMoney();
+            }
         } else {
             alert("Недостаточно денег!");
         }
     }
+
 }
 
-// Настройки магазина
 const shop = [
     new ShopElement("b1", obj => obj.price = clickGain * 25 * obj.purchaseLvl, obj => clickGain *= 2),
-    new ShopElement("b2", obj => obj.price = 200 * obj.purchaseLvl, obj => autoGain += 5),
-    new ShopElement("b3", obj => obj.price = autoGain * 30 * obj.purchaseLvl + 500, obj => autoGain *= 2)
+    new ShopElement("b2", obj => obj.price = 200 * obj.purchaseLvl, obj => autoGain += 4),
+    new ShopElement("b3", obj => obj.price = (autoGain / 2) * 30 * obj.purchaseLvl + 500, obj => autoGain *= 2)
 ];
 
-// Восстановление магазина после загрузки
-function restoreShop(data) {
-    shop.forEach(item => {
-        if (data.shop[item.id]) {
-            item.purchaseLvl = data.shop[item.id];
-            for (let i = 1; i < item.purchaseLvl; i++) {
-                item.onClick(item);
-            }
-            item.update();
-        }
-    });
-}
+async function loadProgress() {
+    const savedData = await sendRequest("/loadScore", "GET");
 
-// Загрузка прогресса
-function loadProgress() {
-    const savedData = JSON.parse(localStorage.getItem("gameProgress"));
     if (savedData) {
-        money = savedData.money;
+        money = savedData.score;
         clickGain = savedData.clickGain;
         autoGain = savedData.autoGain;
-        shop.forEach((item, index) => {
-            item.purchaseLvl = savedData.shop[index] || 1;
-            item.update();
-        });
 
-        // Запускаем автоначисление, если был куплен авто-клик
-        if (shop[1].purchaseLvl > 1) {
-            autoMoney(1);
+        shop[0].purchaseLvl = savedData.b1Level;
+        shop[1].purchaseLvl = savedData.b2Level;
+        shop[2].purchaseLvl = savedData.b3Level;
+
+        shop.forEach(item => item.update());
+
+        if (shop[2].purchaseLvl > 1) {
+            clearInterval(interval);
+            interval = null;
+            autoMoney();
         }
     }
     updateMoney();
 }
 
 
+
 document.addEventListener('DOMContentLoaded', async () => {
     await loadProgress();
-    if (shop[1].purchaseLvl > 1) { // Проверяем, был ли куплен автокликер
+    if (shop[1].purchaseLvl > 1) {
         autoMoney();
     }
 });
 
 
-// Функция для сохранения прогресса
-function saveProgress() {
+async function saveProgress() {
     const data = {
-        money,
-        clickGain,
-        autoGain,
-        shop: shop.map(item => item.purchaseLvl) // Сохранение уровней покупок
+        score: money,
+        clickGain: clickGain,
+        autoGain: autoGain,
+        clickMultiplier: 1,
+        autoGainBonus: 0,
+        autoMultiplier: 1,
+        b1Level: shop[0].purchaseLvl,
+        b2Level: shop[1].purchaseLvl,
+        b3Level: shop[2].purchaseLvl
     };
-    localStorage.setItem("gameProgress", JSON.stringify(data));
+
+    await sendRequest("/save", "POST", data);
 }
 
-
-// Обработчик кликов по кнопке кликера
 clickerButton.addEventListener("click", () => {
     money += clickGain;
     updateMoney();
     saveProgress();
 });
 
-// Функция запроса к серверу
 async function sendRequest(url, method, body = null) {
-    const headers = { "Content-Type": "application/json" };
+    const headers = {"Content-Type": "application/json"};
 
     const response = await fetch(url, {
         method,
