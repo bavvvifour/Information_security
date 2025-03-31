@@ -30,6 +30,54 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    private int clickMultiplier = 1; // Х2 тапа в нажатие
+    private int autoGainBonus = 0;   // +5 в секунду
+    private int autoMultiplier = 1;  // Х2 авто-тап
+
+    public int getClickMultiplier() {
+        return clickMultiplier;
+    }
+
+    public void setClickMultiplier(int clickMultiplier) {
+        this.clickMultiplier = clickMultiplier;
+    }
+
+    public int getAutoMultiplier() {
+        return autoMultiplier;
+    }
+
+    public void setAutoMultiplier(int autoMultiplier) {
+        this.autoMultiplier = autoMultiplier;
+    }
+
+    public int getAutoGainBonus() {
+        return autoGainBonus;
+    }
+
+    public void setAutoGainBonus(int autoGainBonus) {
+        this.autoGainBonus = autoGainBonus;
+    }
+
+    private int clickGain = 1;
+
+    private int autoGain = 1;
+
+    public int getClickGain() {
+        return clickGain;
+    }
+
+    public void setClickGain(int clickGain) {
+        this.clickGain = clickGain;
+    }
+
+    public int getAutoGain() {
+        return autoGain;
+    }
+
+    public void setAutoGain(int autoGain) {
+        this.autoGain = autoGain;
+    }
+
     @Override
     public String getUsername() {
         return username;

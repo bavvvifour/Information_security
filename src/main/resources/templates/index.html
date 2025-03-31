@@ -7,7 +7,7 @@
 </head>
 <body>
 <!-- PLAYER MONEY -->
-<p id="money" class="money-text">0 е-балл</p>
+<p id="money" class="money-text" th:text="${score} + ' е-балл'">0 е-балл</p>
 
 <!-- MAIN CLICKER BUTTON -->
 <button id="main-clicker" class="clicker">
@@ -18,6 +18,16 @@
 <button id="b1" class="button" disabled><b></b>х2 тапа в нажатие</button>
 <button id="b2" class="button" disabled><b></b>+5 в секунду</button>
 <button id="b3" class="button" disabled><b></b>х2 авто-тап</button>
+
+<!-- Скрытая форма для отправки счета -->
+<form id="scoreForm" action="save" method="POST" style="display:none;">
+    <input type="hidden" name="score" id="scoreInput">
+</form>
+
+<!-- Скрытые поля для хранения значений -->
+<input type="hidden" id="clickMultiplier" value="1">
+<input type="hidden" id="autoGainBonus" value="0">
+<input type="hidden" id="autoMultiplier" value="1">
 
 <script src="/js/script.js"></script>
 
