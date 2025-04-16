@@ -9,14 +9,14 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
     open-in-view: false
   mail:
     host: smtp.mail.ru
     port: 587
     username: bayanovv8091@mail.ru
-    password: vnsX186pLg7i8SL7RqVz
+    password: Q7SPjJk33mfriDSauJUE
     properties:
       mail:
         smtp:
