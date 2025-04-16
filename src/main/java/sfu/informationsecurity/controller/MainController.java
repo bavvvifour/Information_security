@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.server.ResponseStatusException;
+import sfu.informationsecurity.model.Score;
 import sfu.informationsecurity.model.User;
+import sfu.informationsecurity.repository.ScoreRepository;
 import sfu.informationsecurity.repository.UserRepository;
 import sfu.informationsecurity.service.ScoreService;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -20,10 +23,12 @@ public class MainController {
 
     private final ScoreService scoreService;
     private final UserRepository userRepository;
+    private final ScoreRepository scoreRepository;
 
-    public MainController(ScoreService scoreService, UserRepository userRepository) {
+    public MainController(ScoreService scoreService, UserRepository userRepository, ScoreRepository scoreRepository) {
         this.scoreService = scoreService;
         this.userRepository = userRepository;
+        this.scoreRepository = scoreRepository;
     }
 
     @GetMapping("/")
@@ -87,5 +92,12 @@ public class MainController {
                 "b2Level", b2Level,
                 "b3Level", b3Level
         );
+    }
+
+    @GetMapping("/leaders")
+    public String showLeaderboard(Model model) {
+        List<Score> topScores = scoreRepository.findTopScores();
+        model.addAttribute("topScores", topScores);
+        return "leaders";
     }
 }

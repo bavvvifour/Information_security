@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Таблица лидеров</title>
+</head>
+<body>
+<h1>🏆 Таблица лидеров</h1>
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Пользователь</th>
+        <th>Лучший счёт</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="score, stat : ${topScores}">
+        <td th:text="${stat.index + 1}">1</td>
+        <td th:text="${score.user.username}">Имя</td>
+        <td th:text="${score.score}">100</td>
+    </tr>
+    </tbody>
+</table>
+<a href="/">⬅ Вернуться к игре</a>
+</body>
+</html>

@@ -10,12 +10,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import sfu.informationsecurity.dto.LoginRequest;
 import sfu.informationsecurity.dto.RegisterRequest;
 import sfu.informationsecurity.model.Role;
 import sfu.informationsecurity.model.User;
 import sfu.informationsecurity.repository.UserRepository;
 import sfu.informationsecurity.service.JwtService;
+import sfu.informationsecurity.service.VerificationService;
 
 @Controller
 public class AuthController {
@@ -24,12 +26,18 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final VerificationService verificationService;
 
-    public AuthController(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
+    public AuthController(UserRepository userRepository,
+                          PasswordEncoder passwordEncoder,
+                          JwtService jwtService,
+                          AuthenticationManager authenticationManager,
+                          VerificationService verificationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.verificationService = verificationService;
     }
 
     @PostMapping("/registration")
@@ -43,11 +51,16 @@ public class AuthController {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
+        user.setEmail(request.getEmail());
+        user.setEnabled(false);
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user.getUsername());
-        return "redirect:/login";
+        verificationService.sendVerificationEmail(user);
+
+        model.addAttribute("email", request.getEmail());
+        return "verification-info";
     }
+
 
     @GetMapping("/registration")
     public String registrationPage() {
@@ -75,4 +88,15 @@ public class AuthController {
     public String loginPage() {
         return "login";
     }
+
+    @GetMapping("/confirm")
+    public String confirm(@RequestParam("token") String token, Model model) {
+        if (verificationService.confirmToken(token)) {
+            model.addAttribute("message", "Аккаунт успешно подтверждён!");
+        } else {
+            model.addAttribute("error", "Ссылка недействительна или устарела");
+        }
+        return "login";
+    }
+
 }

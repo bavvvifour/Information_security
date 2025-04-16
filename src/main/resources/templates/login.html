@@ -7,11 +7,33 @@
 </head>
 <body>
 <h2>Авторизация</h2>
-<form action="login" method="post">
-    <label>Имя пользователя: <input type="text" name="username" required></label><br>
-    <label>Пароль: <input type="password" name="password" required></label><br>
+<form action="/login" method="post">
+    <label>Имя пользователя:
+        <input type="text" name="username" required>
+    </label><br>
+
+    <label>Пароль:
+        <input type="password" name="password" id="password" required>
+        <button type="button" onclick="togglePassword('password', this)">👁️</button>
+    </label><br>
+
     <button type="submit">Войти</button>
 </form>
-<p><a href="/registration">регистрация</a></p>
+
+<p><a href="/registration">Регистрация</a></p>
+
+<script>
+    function togglePassword(id, btn) {
+        const passwordField = document.getElementById(id);
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            btn.textContent = '🙈';
+        } else {
+            passwordField.type = 'password';
+            btn.textContent = '👁️';
+        }
+    }
+</script>
+
 </body>
 </html>

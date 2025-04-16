@@ -39,6 +39,26 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private int b3Level = 1;
 
+    @Column(nullable = false)
+    private boolean enabled = false;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+
     public int getB1Level() {
         return b1Level;
     }
@@ -115,7 +135,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return enabled;
     }
 
     public Long getId() {
