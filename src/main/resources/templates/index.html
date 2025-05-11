@@ -18,6 +18,7 @@
 <button id="b3" class="button" disabled><b></b>х2 авто-тап</button>
 
 <form id="scoreForm" action="save" method="POST" style="display:none;">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
     <input type="hidden" name="score" id="scoreInput">
 </form>
 

@@ -1,17 +1,29 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: keystore.p12
+    key-store-type: PKCS12
+    key-alias: mycert
+    key-store-password: password
+
 spring:
   application:
     name:
       information-security
+
   datasource:
     url: jdbc:postgresql://localhost:5432/information_security
     username: postgres
     password: 1234
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop 
     show-sql: true
     open-in-view: false
+
   mail:
     host: smtp.mail.ru
     port: 587
